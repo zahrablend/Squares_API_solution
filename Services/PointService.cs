@@ -36,6 +36,11 @@
             points.RemoveAll(point => point.X == x && point.Y == y);
         }
 
+        public List<Point> GetPoints()
+        {
+            return points;
+        }
+
         // Method to print the list of points to the console
         public void PrintPoints()
         {
