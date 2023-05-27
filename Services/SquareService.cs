@@ -15,53 +15,60 @@ namespace Services
             this.pointService = pointService;
         }
 
-        public void FindAndPrintSquares()
+        // Method to find all squares in the list of points and print their coordinates
+        public void FindSquares()
         {
             var points = pointService.GetPoints();
-            var squares = FindSquares(points);
-            foreach (var square in squares)
-            {
-                Console.WriteLine("Square: ");
-                foreach (var point in square)
-                {
-                    Console.WriteLine("({0};{1})", point.X, point.Y);
-                }
-            }
-        }
-
-        public int CountSquares()
-        {
-            var points = pointService.GetPoints();
-            var squares = FindSquares(points);
-            return squares.Count;
-        }
-
-        private List<List<PointService.Point>> FindSquares(List<PointService.Point> points)
-        {
-            var squares = new List<List<PointService.Point>>();
             for (int i = 0; i < points.Count; i++)
-            {
                 for (int j = i + 1; j < points.Count; j++)
-                {
                     for (int k = j + 1; k < points.Count; k++)
-                    {
                         for (int l = k + 1; l < points.Count; l++)
                         {
-                            if (IsSquare(points[i], points[j], points[k], points[l]))
+                            PointService.Point[] square = new PointService.Point[] { points[i], points[j], points[k], points[l] };
+                            if (IsSquare(square))
                             {
-                                squares.Add(new List<PointService.Point> { points[i], points[j], points[k], points[l] });
+                                Console.WriteLine("Square found:");
+                                foreach (PointService.Point point in square)
+                                    Console.WriteLine("({0};{1})", point.X, point.Y);
                             }
                         }
-                    }
-                }
-            }
-            return squares;
         }
 
-        private bool IsSquare(PointService.Point p1, PointService.Point p2, PointService.Point p3, PointService.Point p4)
+        // Method to count the number of squares in the list of points
+        public int CountSquares()
         {
-            // Helper method to check if four given points form a square
-            throw new NotImplementedException();
+            int count = 0;
+            var points = pointService.GetPoints();
+            for (int i = 0; i < points.Count; i++)
+                for (int j = i + 1; j < points.Count; j++)
+                    for (int k = j + 1; k < points.Count; k++)
+                        for (int l = k + 1; l < points.Count; l++)
+                        {
+                            PointService.Point[] square = new PointService.Point[] { points[i], points[j], points[k], points[l] };
+                            if (IsSquare(square))
+                                count++;
+                        }
+            return count;
+        }
+
+        // Helper method to check if four given points form a square
+        private bool IsSquare(PointService.Point[] square)
+        {
+            int[] distances = new int[6];
+            distances[0] = DistanceSquared(square[0], square[1]);
+            distances[1] = DistanceSquared(square[0], square[2]);
+            distances[2] = DistanceSquared(square[0], square[3]);
+            distances[3] = DistanceSquared(square[1], square[2]);
+            distances[4] = DistanceSquared(square[1], square[3]);
+            distances[5] = DistanceSquared(square[2], square[3]);
+            Array.Sort(distances);
+            return distances[0] > 0 && distances[0] == distances[1] && distances[1] == distances[2] && distances[2] == distances[3] && distances[4] == distances[5];
+        }
+
+        // Helper method to calculate the squared distance between two given points
+        private static int DistanceSquared(PointService.Point p1, PointService.Point p2)
+        {
+            return (p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y);
         }
     }
 }
