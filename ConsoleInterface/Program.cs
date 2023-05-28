@@ -1,4 +1,6 @@
-﻿namespace ConsoleInterface
+﻿using Services;
+
+namespace ConsoleInterface
 {
     internal static class Program
     {
@@ -7,7 +9,13 @@
             // Create an instance of the PointService class
             Services.PointService pointService = new();
             Services.SquareService squareService = new(pointService);
+            Services.JsonService jsonService = new JsonService(pointService);
             bool exit = false;
+
+            // Initialize the fileName and filePath variables
+            string fileName = "points.json";
+            string filePath = JsonService.GetDesktopFilePath(fileName);
+
             while (!exit)
             {
                 // Prompt the user to choose an operation
@@ -42,10 +50,12 @@
                         break;
                     case "3":
                         // Save the list of points to a JSON file
-
+                        jsonService.SavePoints(filePath);
+                        break;
                     case "4":
                         // Load the list of points from a JSON file
-
+                        jsonService.LoadPoints(filePath);
+                        break;
                     case "5":
                         // Print the list of points to the console
                         pointService.PrintPoints();
