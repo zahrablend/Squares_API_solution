@@ -40,14 +40,5 @@
         {
             return points;
         }
-
-        // Method to print the list of points to the console
-        public void PrintPoints()
-        {
-            foreach (Point point in points)
-            {
-                Console.WriteLine("({0};{1})", point.X, point.Y);
-            }
-        }
     }
 }
