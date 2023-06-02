@@ -7,9 +7,9 @@ namespace ConsoleInterface
         static void Main(string[] args)
         {
             // Create an instance of the PointService class
-            Services.PointService pointService = new();
-            Services.SquareService squareService = new(pointService);
-            Services.JsonService jsonService = new JsonService(pointService);
+            PointService pointService = new();
+            SquareService squareService = new(pointService);
+            JsonService jsonService = new(pointService);
             bool exit = false;
 
             // Initialize the fileName and filePath variables
@@ -58,7 +58,11 @@ namespace ConsoleInterface
                         break;
                     case "5":
                         // Print the list of points to the console
-                        pointService.PrintPoints();
+                        List<PointService.Point> points = jsonService.LoadPoints("path/to/your/file.json")!;
+                        foreach (PointService.Point point in points)
+                        {
+                            Console.WriteLine("({0};{1})", point.X, point.Y);
+                        }
                         break;
                     case "6":
                         // Find all squares in the list of points and print their coordinates

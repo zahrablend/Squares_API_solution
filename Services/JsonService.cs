@@ -24,7 +24,7 @@ namespace Services
             File.WriteAllText(filePath, jsonString);
         }
 
-        public void LoadPoints(string filePath)
+        public List<PointService.Point>? LoadPoints(string filePath)
         {
             string jsonString = File.ReadAllText(filePath);
             List<PointService.Point>? points = JsonSerializer.Deserialize<List<PointService.Point>>(jsonString);
@@ -35,6 +35,8 @@ namespace Services
                     pointService.AddPoint(point);
                 }
             }
+
+            return points;
         }
 
         public static string GetDesktopFilePath(string fileName)

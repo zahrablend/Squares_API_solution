@@ -8,17 +8,10 @@ namespace Services
 {
     public class SquareService
     {
-        private readonly PointService pointService;
-
-        public SquareService(PointService pointService)
+        // Method to find all squares in the list of points and return a list of squares
+        public List<PointService.Point[]> FindSquares(List<PointService.Point> points)
         {
-            this.pointService = pointService;
-        }
-
-        // Method to find all squares in the list of points and print their coordinates
-        public void FindSquares()
-        {
-            var points = pointService.GetPoints();
+            var squares = new List<PointService.Point[]>();
             for (int i = 0; i < points.Count; i++)
                 for (int j = i + 1; j < points.Count; j++)
                     for (int k = j + 1; k < points.Count; k++)
@@ -27,18 +20,16 @@ namespace Services
                             PointService.Point[] square = new PointService.Point[] { points[i], points[j], points[k], points[l] };
                             if (IsSquare(square))
                             {
-                                Console.WriteLine("Square found:");
-                                foreach (PointService.Point point in square)
-                                    Console.WriteLine("({0};{1})", point.X, point.Y);
+                                squares.Add(square);
                             }
                         }
+            return squares;
         }
 
         // Method to count the number of squares in the list of points
-        public int CountSquares()
+        public int CountSquares(List<PointService.Point> points)
         {
             int count = 0;
-            var points = pointService.GetPoints();
             for (int i = 0; i < points.Count; i++)
                 for (int j = i + 1; j < points.Count; j++)
                     for (int k = j + 1; k < points.Count; k++)
@@ -52,7 +43,7 @@ namespace Services
         }
 
         // Helper method to check if four given points form a square
-        private bool IsSquare(PointService.Point[] square)
+        private static bool IsSquare(PointService.Point[] square)
         {
             int[] distances = new int[6];
             distances[0] = DistanceSquared(square[0], square[1]);
