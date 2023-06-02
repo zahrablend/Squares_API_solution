@@ -18,7 +18,7 @@ namespace Services
                 {
                     squares.Add(square);
                 }
-            }
+            } 
             return squares;
         }
 
