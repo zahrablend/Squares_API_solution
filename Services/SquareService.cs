@@ -12,17 +12,13 @@ namespace Services
         public List<PointService.Point[]> FindSquares(List<PointService.Point> points)
         {
             var squares = new List<PointService.Point[]>();
-            for (int i = 0; i < points.Count; i++)
-                for (int j = i + 1; j < points.Count; j++)
-                    for (int k = j + 1; k < points.Count; k++)
-                        for (int l = k + 1; l < points.Count; l++)
-                        {
-                            PointService.Point[] square = new PointService.Point[] { points[i], points[j], points[k], points[l] };
-                            if (IsSquare(square))
-                            {
-                                squares.Add(square);
-                            }
-                        }
+            foreach (var square in GetCombinations(points))
+            {
+                if (IsSquare(square))
+                {
+                    squares.Add(square);
+                }
+            }
             return squares;
         }
 
@@ -30,16 +26,24 @@ namespace Services
         public int CountSquares(List<PointService.Point> points)
         {
             int count = 0;
+            foreach (var square in GetCombinations(points))
+            {
+                if (IsSquare(square))
+                    count++;
+            }
+            return count;
+        }
+
+        // Helper method to generate all possible combinations of four points
+        private static IEnumerable<PointService.Point[]> GetCombinations(List<PointService.Point> points)
+        {
             for (int i = 0; i < points.Count; i++)
                 for (int j = i + 1; j < points.Count; j++)
                     for (int k = j + 1; k < points.Count; k++)
                         for (int l = k + 1; l < points.Count; l++)
                         {
-                            PointService.Point[] square = new PointService.Point[] { points[i], points[j], points[k], points[l] };
-                            if (IsSquare(square))
-                                count++;
+                            yield return new PointService.Point[] { points[i], points[j], points[k], points[l] };
                         }
-            return count;
         }
 
         // Helper method to check if four given points form a square
