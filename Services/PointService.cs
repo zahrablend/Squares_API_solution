@@ -24,6 +24,12 @@
             points = new List<Point>();
         }
 
+        // Method to clear all points from the list
+        public void ClearPoints()
+        {
+            points.Clear();
+        }
+
         // Method to add a point to the list
         public void AddPoint(Point point)
         {

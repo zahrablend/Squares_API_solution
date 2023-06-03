@@ -8,7 +8,7 @@ namespace ConsoleInterface
         {
             // Create an instance of the PointService class
             PointService pointService = new();
-            JsonService jsonService = new(pointService);
+            JsonService jsonService = new();
             SquareService squareService = new();
             bool exit = false;
 
@@ -45,10 +45,9 @@ namespace ConsoleInterface
             Console.WriteLine("2. Delete point");
             Console.WriteLine("3. Save to JSON");
             Console.WriteLine("4. Load from JSON");
-            Console.WriteLine("5. Print points");
-            Console.WriteLine("6. Find squares");
-            Console.WriteLine("7. Count squares");
-            Console.WriteLine("8. Exit");
+            Console.WriteLine("5. Find squares");
+            Console.WriteLine("6. Count squares");
+            Console.WriteLine("7. Exit");
         }
 
         public string? GetUserInput()
@@ -84,6 +83,7 @@ namespace ConsoleInterface
                     int y = Convert.ToInt32(Console.ReadLine());
                     _pointService.AddPoint(new Services.PointService.Point(x, y));
                     break;
+
                 case "2":
                     // Delete a point from the list based on its x and y values
                     Console.Write("Enter x: ");
@@ -92,49 +92,72 @@ namespace ConsoleInterface
                     y = Convert.ToInt32(Console.ReadLine());
                     _pointService.DeletePoint(x, y);
                     break;
+
                 case "3":
                     // Save the list of points to a JSON file
-                    _jsonService.SavePoints(filePath);
+                    List<PointService.Point> pointsToSave = _pointService.GetPoints();
+                    _jsonService.SavePoints(filePath, pointsToSave);
                     break;
+
                 case "4":
                     // Load the list of points from a JSON file
-                    _jsonService.LoadPoints(filePath);
-                    break;
-                case "5":
+                    List<PointService.Point>? loadedPoints = _jsonService.LoadPoints(filePath);
+                    if (loadedPoints != null)
+                    {
+                        _pointService.ClearPoints();
+                        foreach (PointService.Point point in loadedPoints)
+                        {
+                            _pointService.AddPoint(point);
+                        }
+                    }
+
                     // Print the list of points to the console
-                    List<PointService.Point> points = _pointService.GetPoints();
-                    foreach (PointService.Point point in points)
+                    List<PointService.Point> pointsToPrint = _pointService.GetPoints();
+                    foreach (PointService.Point point in pointsToPrint)
                     {
                         Console.WriteLine("({0};{1})", point.X, point.Y);
                     }
                     break;
-                case "6":
+
+
+                case "5":
                     // Find all squares in the list of points and print their coordinates
                     List<PointService.Point[]> squares = _squareService.FindSquares(_pointService.GetPoints());
-                    var uniqueSquares = new HashSet<string>();
-                    foreach (var square in squares)
+                    if (squares.Count == 0)
                     {
-                        var orderedSquare = square.OrderBy(p => p.X).ThenBy(p => p.Y).ToArray();
-                        var squareString = $"({orderedSquare[0].X},{orderedSquare[0].Y}),({orderedSquare[1].X},{orderedSquare[1].Y}),({orderedSquare[2].X},{orderedSquare[2].Y}),({orderedSquare[3].X},{orderedSquare[3].Y})";
-                        if (!uniqueSquares.Contains(squareString))
+                        Console.WriteLine(0);
+                    }
+                    else
+                    {
+                        // The HashSet<T> class provides high-performance set operations.
+                        // A set is a collection that contains no duplicate elements, and whose elements are in no particular order:
+                        // https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.hashset-1?view=net-7.0
+                        var uniqueSquares = new HashSet<string>();
+                        foreach (var square in squares)
                         {
-                            uniqueSquares.Add(squareString);
-                            Console.WriteLine(squareString);
+                            var orderedSquare = square.OrderBy(p => p.X).ThenBy(p => p.Y).ToArray();
+                            var squareString = $"({orderedSquare[0].X},{orderedSquare[0].Y}),({orderedSquare[1].X},{orderedSquare[1].Y}),({orderedSquare[2].X},{orderedSquare[2].Y}),({orderedSquare[3].X},{orderedSquare[3].Y})";
+                            if (!uniqueSquares.Contains(squareString))
+                            {
+                                uniqueSquares.Add(squareString);
+                                Console.WriteLine(squareString);
+                            }
                         }
                     }
                     break;
 
-                case "7":
+                case "6":
                     // Count and print the number of squares in the list of points
                     int countSquares = _squareService.CountSquares(_pointService.GetPoints());
                     Console.WriteLine(countSquares);
 
                     break;
 
-                case "8":
+                case "7":
                     // Exit the program
                     exit = true;
                     break;
+
                 default:
                     Console.WriteLine("Invalid input");
                     break;
