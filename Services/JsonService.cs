@@ -10,16 +10,8 @@ namespace Services
 {
     public class JsonService
     {
-        private readonly PointService pointService;
-
-        public JsonService(PointService pointService)
+        public void SavePoints(string filePath, List<PointService.Point> points)
         {
-            this.pointService = pointService;
-        }
-
-        public void SavePoints(string filePath)
-        {
-            List<PointService.Point> points = pointService.GetPoints();
             string jsonString = JsonSerializer.Serialize(points);
             File.WriteAllText(filePath, jsonString);
         }
@@ -28,14 +20,6 @@ namespace Services
         {
             string jsonString = File.ReadAllText(filePath);
             List<PointService.Point>? points = JsonSerializer.Deserialize<List<PointService.Point>>(jsonString);
-            if (points != null)
-            {
-                foreach (PointService.Point point in points)
-                {
-                    pointService.AddPoint(point);
-                }
-            }
-
             return points;
         }
 

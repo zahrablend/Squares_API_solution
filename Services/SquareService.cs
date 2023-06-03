@@ -42,6 +42,7 @@ namespace Services
                     for (int k = j + 1; k < points.Count; k++)
                         for (int l = k + 1; l < points.Count; l++)
                         {
+                            // statement in an iterator provides the next value: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/yield
                             yield return new PointService.Point[] { points[i], points[j], points[k], points[l] };
                         }
         }
