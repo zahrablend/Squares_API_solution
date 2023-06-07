@@ -11,27 +11,13 @@ namespace Services
         // Method to find all squares in the list of points and return a list of squares
         public List<PointService.Point[]> FindSquares(List<PointService.Point> points)
         {
-            var squares = new List<PointService.Point[]>();
-            foreach (var square in GetCombinations(points))
-            {
-                if (IsSquare(square))
-                {
-                    squares.Add(square);
-                }
-            } 
-            return squares;
+            return (GetCombinations(points).Where(combination => IsSquare(combination))).ToList();
         }
 
         // Method to count the number of squares in the list of points
         public int CountSquares(List<PointService.Point> points)
         {
-            int count = 0;
-            foreach (var square in GetCombinations(points))
-            {
-                if (IsSquare(square))
-                    count++;
-            }
-            return count;
+            return (GetCombinations(points).Where(square => IsSquare(square))).Count();
         }
 
         // Helper method to generate all possible combinations of four points
