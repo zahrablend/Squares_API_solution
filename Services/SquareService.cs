@@ -17,7 +17,7 @@ namespace Services
         // Method to count the number of squares in the list of points
         public int CountSquares(List<PointService.Point> points)
         {
-            return (GetCombinations(points).Where(square => IsSquare(square))).Count();
+            return FindSquares(points).Count;
         }
 
         // Helper method to generate all possible combinations of four points
