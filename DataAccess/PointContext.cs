@@ -15,7 +15,7 @@ namespace DataAccess
         // Configuration
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Database=my_db;Username=my_user;Password=my_pw");
+            optionsBuilder.UseNpgsql("Host=LAPTOP-010BK67M;Database=squareapi_db;Username=zahra;Password=adform");
         }
     }
 }

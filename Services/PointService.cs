@@ -1,50 +1,50 @@
-﻿namespace Services
+﻿using DataAccess;
+
+namespace Services
 {
     public class PointService
     {
-        // Define a struct to represent a point with x and y coordinates
-        public struct Point
+        private readonly PointRepository _pointRepository;
+        public PointService(PointRepository pointRepository)
         {
-            public int X { get; set; }
-            public int Y { get; set; }
+            _pointRepository = pointRepository;
+        }
 
-            public Point(int x, int y)
+        // Method to clear all points from the database
+        public void ClearPoints()
+        {
+            var points = GetPointsFromDatabase();
+            foreach (var point in points)
             {
-                this.X = x;
-                this.Y = y;
+                _pointRepository.DeletePoint(point);
             }
         }
 
-        // A List<Point> to store the points
-        private readonly List<Point> points;
-
-        // Constructor to initialize the list of points
-        public PointService()
-        {
-            points = new List<Point>();
-        }
-
-        // Method to clear all points from the list
-        public void ClearPoints()
-        {
-            points.Clear();
-        }
-
-        // Method to add a point to the list
+        // Method to add a point to the database
         public void AddPoint(Point point)
         {
-            points.Add(point);
+            _pointRepository.AddPoint(point);
         }
 
-        // Method to delete a point from the list based on its x and y values
+        // Method to delete a point from the database based on its x and y values
         public void DeletePoint(int x, int y)
         {
-            points.RemoveAll(point => point.X == x && point.Y == y);
+            var pointToDelete = GetPointsFromDatabase().FirstOrDefault(point => 
+            point.X == x && point.Y == y);
+            if (pointToDelete != null)
+            {
+                _pointRepository.DeletePoint(pointToDelete);
+            }
         }
 
         public List<Point> GetPoints()
         {
-            return points;
+            return _pointRepository.GetPoints().ToList();
+        }
+
+        private IEnumerable<Point> GetPointsFromDatabase()
+        {
+            return _pointRepository.GetPoints();
         }
     }
 }

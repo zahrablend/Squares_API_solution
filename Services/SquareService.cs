@@ -9,19 +9,19 @@ namespace Services
     public class SquareService
     {
         // Method to find all squares in the list of points and return a list of squares
-        public List<PointService.Point[]> FindSquares(List<PointService.Point> points)
+        public List<DataAccess.Point[]> FindSquares(List<DataAccess.Point> points)
         {
-            return (GetCombinations(points).Where(combination => IsSquare(combination))).ToList();
+            return GetCombinations(points).Where(IsSquare).ToList();
         }
 
         // Method to count the number of squares in the list of points
-        public int CountSquares(List<PointService.Point> points)
+        public int CountSquares(List<DataAccess.Point> points)
         {
             return FindSquares(points).Count;
         }
 
         // Helper method to generate all possible combinations of four points
-        private static IEnumerable<PointService.Point[]> GetCombinations(List<PointService.Point> points)
+        private static IEnumerable<DataAccess.Point[]> GetCombinations(List<DataAccess.Point> points)
         {
             for (int i = 0; i < points.Count; i++)
                 for (int j = i + 1; j < points.Count; j++)
@@ -29,12 +29,12 @@ namespace Services
                         for (int l = k + 1; l < points.Count; l++)
                         {
                             // statement in an iterator provides the next value: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/yield
-                            yield return new PointService.Point[] { points[i], points[j], points[k], points[l] };
+                            yield return new DataAccess.Point[] { points[i], points[j], points[k], points[l] };
                         }
         }
 
         // Helper method to check if four given points form a square
-        private static bool IsSquare(PointService.Point[] square)
+        private static bool IsSquare(DataAccess.Point[] square)
         {
             int[] distances = new int[6];
             distances[0] = DistanceSquared(square[0], square[1]);
@@ -48,7 +48,7 @@ namespace Services
         }
 
         // Helper method to calculate the squared distance between two given points
-        private static int DistanceSquared(PointService.Point p1, PointService.Point p2)
+        private static int DistanceSquared(DataAccess.Point p1, DataAccess.Point p2)
         {
             return (p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y);
         }
